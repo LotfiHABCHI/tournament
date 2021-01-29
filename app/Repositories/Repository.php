@@ -56,33 +56,34 @@ class Repository
 
     function team($teamId) : array
     {
-       
-        if($teamId==10000){
+        $team= DB::table('teams')->where('id', $teamId)->get()->toArray();
+
+        if(count($team)==0){
             throw new Exception('Équipe inconnue'); # ou l'appel d'une fonction ou méthode qui peut lever une exception
         }
-        try{
+       /* try{
         //$this->team(10000);    
         }catch (Exception $exception) {
             $message = $exception->getMessage();
             echo $exception->getMessage();
-        }
-        $team= DB::table('teams')->where('id', $teamId)->get()->toArray();
+        }*/
       
         return  $team[0];
     }
     
     function match($matchId): array
     {
-        if($matchId==10000){
-            throw new Exception('Match inconnu'); # ou l'appel d'une fonction ou méthode qui peut lever une exception
+        $match= DB::table('matches')->where('id', $matchId)->get()->toArray();
+
+        if(empty($match)){
+            throw new Exception('Match inconnu');
         }
-        try{
-        //$this->match(10000);    
+        /*try{
+        $this->match(10000);    
         }catch (Exception $exception) {
             $message = $exception->getMessage();
             echo $exception->getMessage();
-        }
-        $match= DB::table('matches')->where('id', $matchId)->get()->toArray();
+        }*/
       
         return  $match[0];
     }
@@ -117,6 +118,16 @@ class Repository
                               ->get(['matches.*', 'teams0.name as name0', 'teams1.name as name1'])
                                ->toArray();
         return $matches;
+    }
+
+    function rankingRow($teamId) : array
+    {
+        $rows = DB::table('ranking')->join('teams', 'ranking.team_id', '=', 'teams.id')->select('ranking.*','teams.name')->where('ranking.team_id', $teamId)->get()->toArray();
+        if(empty($rows)){
+            throw new Exception('Équipe inconnue');
+        }
+        return $rows[0];
+
     }
 
 }
