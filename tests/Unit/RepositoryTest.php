@@ -111,7 +111,7 @@ class RepositoryTest extends TestCase
     $this->repository->team(10000);
 }
 
-function testTeamThrowsExceptionIfMatchDoesNotExist(): void
+function testMatchThrowsExceptionIfMatchDoesNotExist(): void
 {
     $this->repository->fillDatabase();
     $this->expectException(Exception::class);

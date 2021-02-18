@@ -106,15 +106,20 @@ class Repository
     function sortedRanking(): array
     {
         
-        $rows = DB::table('ranking')->join('teams', 'ranking.team_id', '=', 'teams.id')->select('ranking.*','teams.name')->orderBy('rank', 'asc')->get()->toArray();
+        $rows = DB::table('ranking')->join('teams', 'ranking.team_id', '=', 'teams.id')
+                                        ->select('ranking.*','teams.name')
+                                            ->orderBy('rank', 'asc') 
+                                                ->get()->toArray();
         return $rows;
     }
 
     function teamMatches($teamId) : array
     {
-        $matches = DB::table('matches')->join('teams as teams0', 'matches.team0', '=', 'teams0.id')->join('teams as teams1', 'matches.team1', '=', 'teams1.id')
+        $matches = DB::table('matches')->join('teams as teams0', 'matches.team0', '=', 'teams0.id')
+                                        ->join('teams as teams1', 'matches.team1', '=', 'teams1.id')
                         ->where('matches.team0', $teamId)
                             ->orWhere('matches.team1', $teamId)
+                            ->orderBy('date')
                               ->get(['matches.*', 'teams0.name as name0', 'teams1.name as name1'])
                                ->toArray();
         return $matches;
@@ -122,7 +127,8 @@ class Repository
 
     function rankingRow($teamId) : array
     {
-        $rows = DB::table('ranking')->join('teams', 'ranking.team_id', '=', 'teams.id')->select('ranking.*','teams.name')->where('ranking.team_id', $teamId)->get()->toArray();
+        $rows = DB::table('ranking')->join('teams', 'ranking.team_id', '=', 'teams.id')
+                        ->select('ranking.*','teams.name')->where('ranking.team_id', $teamId)->get()->toArray();
         if(empty($rows)){
             throw new Exception('Équipe inconnue');
         }
