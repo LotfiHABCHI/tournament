@@ -19,7 +19,6 @@ class Repository
     function insertTeam(array $team): int
     {
         return DB::table('teams')->insertGetId($team);
-    
     }
 
     function insertMatch(array $match): int
@@ -136,5 +135,59 @@ class Repository
 
     }
 
+    function addUser(string $email, string $password): int
+    {
+        $passwordHash = Hash::make($password);
+        return DB::table('users')->insert(['email'=>$email, 'password_hash'=> $passwordHash]);
+    }
+
+
+    function getUser(string $email, string $password): array
+    {
+    // TODO
+    
+    $users= DB::table('users')->where('email', $email)->get()->toArray();
+    
+    if (count($users)==0){
+        throw new Exception('Utilisateur inconnu');
+    }
+    $user=$users[0];
+   
+    $ok = Hash::check($password, $user['password_hash']);
+
+        if (!$ok){
+            throw new Exception('Utilisateur inconnu');
+        }
+    return ['id'=>$user['id'],'email'=>$user['email']];
+    }
+    
+
+    function changePassword(string $email, string $oldPassword, string $newPassword): void 
+    {
+    // TODO
+
+      //verifier si le mot de passe est correct:
+
+      $users= DB::table('users')->where('email', $email)->get()->toArray();
+
+      if(count($users)==0){
+        throw new Exception('Utilisateur inconnu');
+      }
+
+
+      $ok = Hash::check($oldPassword, $users[0]['password_hash']);
+      if (!$ok){
+        throw new Exception('Utilisateur inconnu');
+      }
+      
+      $newPasswordHash = Hash::make($newPassword);
+      DB::table('users')->where('email', $email)->update(['password_hash'=> $newPasswordHash]);
+    }
+
+    public function deleteMatch($matchId) :void
+    {
+        DB::table('matches')->where('id', $matchId)->delete();
+    }
+    
 }
 

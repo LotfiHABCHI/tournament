@@ -16,7 +16,7 @@ class ControllerTest extends TestCase
                 [
                     'rank' => 2, 
                     'name' => 'Lyon', 
-                    //'team_id' => 3, 
+                    'team_id' => 3, 
                     'match_played_count' => 38, 
                     'won_match_count' => 19, 
                     'lost_match_count' => 13, 
@@ -69,5 +69,5 @@ class ControllerTest extends TestCase
         $response->assertSeeTextInOrder(['N°', 'Équipe', 'MJ', 'G', 'N', 'P', 'BP', 'BC', 'DB', 'PTS']);
         $response->assertSeeTextInOrder([2, 'Lyon', 38, 19, 6, 13, 111, 97, 14, 63]);
         $response->assertSeeTextInOrder(['2048-08-03 00:00:00', 'Lyon', 3, 5, 'Angers']);
-    }
+    }   
 }

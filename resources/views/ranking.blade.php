@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html >
 @extends('base')
@@ -30,10 +28,19 @@
                 <tbody>
                 
                 @foreach ($ranking as $match)
-                <tr><td>{{ $match['rank'] }}</td><td><a href="{{route('ranking.show', ['team_id'=>$match['name']])}}">{{$match['name']}}</a></td>
+                @if (Cookie::get('followed_team')== $match['team_id'])
+                <tr class="table-primary" ><td>{{ $match['rank'] }}</td><td > <a href="{{route('teams.show', ['teamId'=>$match['team_id']])}}">{{$match['name']}}</a></td>
                 <td>{{ $match['match_played_count'] }}</td><td>{{ $match['won_match_count'] }}</td><td>{{ $match['draw_match_count'] }}</td>
                 <td>{{ $match['lost_match_count'] }}</td><td>{{ $match['goal_for_count'] }}</td>
                 <td>{{ $match['goal_against_count'] }}</td><td>{{ $match['goal_difference'] }}</td><td>{{ $match['points'] }}</td></th>
+               
+                @else
+                <tr ><td>{{ $match['rank'] }}</td><td > <a href="{{route('teams.show', ['teamId'=>$match['team_id']])}}">{{$match['name']}}</a></td>
+                <td>{{ $match['match_played_count'] }}</td><td>{{ $match['won_match_count'] }}</td><td>{{ $match['draw_match_count'] }}</td>
+                <td>{{ $match['lost_match_count'] }}</td><td>{{ $match['goal_for_count'] }}</td>
+                <td>{{ $match['goal_against_count'] }}</td><td>{{ $match['goal_difference'] }}</td><td>{{ $match['points'] }}</td></th>
+               @endif
+
                  @endforeach
                 </tbody>
             </table>
@@ -42,4 +49,3 @@
         </div>
     </body>
 </html>
-

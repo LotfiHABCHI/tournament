@@ -12,13 +12,15 @@
   
    <div class="container">
    @section('content')
+   <a class="btn btn-primary" href="{{ route('teams.follow', ['teamId'=>$team1['team_id']]) }}">Suivre</a><br><br>
+
    <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
                     <th>N°<th>Équipe<th>MJ</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>DB</th><th>PTS</th></th></tr>
                 </thead>
                 <tbody>
-                <tr><td>{{ $team1['rank'] }}</td><td><a href="{{route('teams.show', ['teamId'=>$team1['name']])}}">{{$team1['name']}}</a></td>
+                <tr><td>{{ $team1['rank'] }}</td><td> <a href="{{route('teams.show', ['teamId'=>$team1['team_id']])}}">{{$team1['name']}}</a></td>
                 <td>{{ $team1['match_played_count'] }}</td><td>{{ $team1['won_match_count'] }}</td><td>{{ $team1['draw_match_count'] }}</td>
                 <td>{{ $team1['lost_match_count'] }}</td><td>{{ $team1['goal_for_count'] }}</td>
                 <td>{{ $team1['goal_against_count'] }}</td><td>{{ $team1['goal_difference'] }}</td>
@@ -32,11 +34,14 @@
                 </thead>
                 <tbody>
                 @foreach ($team as $match)
+                
                 <tr><td>  </td><td>{{ $match['date'] }}</td>
-                <td><a href="{{route('teams.show', ['teamId'=>$match['name0']])}}">
+                <td><a href="{{route('teams.show', ['teamId'=>$match['team0']])}}">
                 {{ $match['name0'] }}</a></td><td>{{ $match['score0'] }}</td>  
-                <td>{{ $match['score1'] }}</td><td><a href="{{route('teams.show', ['teamId'=>$match['name1']])}}">
-                {{ $match['name1'] }}</a></td></th>
+                <td>{{ $match['score1'] }}</td><td><a href="{{route('teams.show', ['teamId'=>$match['team1']])}}">
+                {{ $match['name1'] }}</a></td> <td> <a  type="submit" class="btn btn-outline-primary">Supprimer le match</a>
+</td></th>
+
             @endforeach
                 </tbody>
             </table>
