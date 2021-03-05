@@ -56,7 +56,6 @@
       <input type="number" class="form-control" id="score1" name="score1" min="0">
     </div>
     <button type="submit" class="btn btn-primary">Soumettre</button>
-    <input type="hidden" name="_token" value="BOmLY6eIjBtceAlVQMxm8fpLOVbk2OIb24k4l89a">
 
 </form>
 @endsection

@@ -30,7 +30,7 @@
        <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                   <!-- <th><td>Date</td><td>team0</td><td>score0</td>  <td>score1</td><td>team1</td></th>  -->                   </tr>
+                   <!-- <th><td>Date</td><td>team0</td><td>score0</td>  <td>score1</td><td>team1</td></th>  --></tr>
                 </thead>
                 <tbody>
                 @foreach ($team as $match)
@@ -39,7 +39,7 @@
                 <td><a href="{{route('teams.show', ['teamId'=>$match['team0']])}}">
                 {{ $match['name0'] }}</a></td><td>{{ $match['score0'] }}</td>  
                 <td>{{ $match['score1'] }}</td><td><a href="{{route('teams.show', ['teamId'=>$match['team1']])}}">
-                {{ $match['name1'] }}</a></td> <td> <a  type="submit" class="btn btn-outline-primary">Supprimer le match</a>
+                {{ $match['name1'] }}</a></td> <td>  
 </td></th>
 
             @endforeach

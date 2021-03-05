@@ -196,6 +196,14 @@ public function login(Request $request, Repository $repository)
     }
     
 
-    
+    public function deleteMatch(int $matchId)
+    {
+        if (session()->has('user')){
+            $match=$this->repository->delete($matchId);     
+                return view('matches.delete', ['match'=>$match]);
+            }
+            return redirect()->route('login');
+       
+    }
    
 }

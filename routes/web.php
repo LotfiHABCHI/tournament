@@ -35,6 +35,8 @@ Route::get('/teams/{teamId}/follow', [Controller::class, 'followTeam'])->where('
 
 Route::post('/logout', [Controller::class, 'logout'])->name('logout');
 
+Route::get('/matchs/{matchId}/delete', [Controller::class, 'deleteMatch'])->where('matchId', '[0-9]+')->name('matches.delete');
+
 
 
 

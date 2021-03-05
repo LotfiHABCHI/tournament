@@ -23,7 +23,6 @@
                         <span class="btn btn-primary disabled">{{ session()->get('user')['email'] }}</span>
                        <button  type="submit" class="btn btn-outline-primary">Déconnexion</a>
                     </div>
-                    <input type="hidden" name="_token" value="BOmLY6eIjBtceAlVQMxm8fpLOVbk2OIb24k4l89a">
 
                 </form>
             @else

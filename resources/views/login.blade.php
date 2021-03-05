@@ -31,7 +31,6 @@
       @enderror
     </div>
     <button type="submit" class="btn btn-primary">Se connecter</button>
-    <input type="hidden" name="_token" value="BOmLY6eIjBtceAlVQMxm8fpLOVbk2OIb24k4l89a">
 
 
 </form>

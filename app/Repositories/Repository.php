@@ -184,7 +184,7 @@ class Repository
       DB::table('users')->where('email', $email)->update(['password_hash'=> $newPasswordHash]);
     }
 
-    public function deleteMatch($matchId) :void
+    public function delete($matchId) :void
     {
         DB::table('matches')->where('id', $matchId)->delete();
     }
