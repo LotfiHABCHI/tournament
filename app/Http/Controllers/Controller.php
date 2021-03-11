@@ -20,7 +20,7 @@ class Controller extends BaseController
 
     public function __construct(Repository $repository)
     {
-    $this->repository = $repository;
+        $this->repository = $repository;
     }
 
 
@@ -28,8 +28,6 @@ class Controller extends BaseController
     {
        $ranking = $this->repository->sortedRanking();
         return view('ranking', ['ranking' => $ranking]);
-        
-
     }
 
     public function showTeam(int $teamId)
@@ -46,7 +44,6 @@ class Controller extends BaseController
             return view('team_create');
         }
         return redirect()->route('login');
-       
     }
 
     public function storeTeam(Request $request)
@@ -65,14 +62,12 @@ class Controller extends BaseController
             try {
                 // appels aux méthodes de l'objet de la classe Repository
                 $teamId=$this->repository->insertTeam(['name'=>$validatedData['team_name']]);
-            $this->repository->updateRanking();
+                $this->repository->updateRanking();
 
-                } catch (Exception $exception) {
-                    return redirect()->route('teams.create')->withInput()->withErrors("Impossible de créer l'équipe.");
-                }
-
-                
-                    return redirect()->route('teams.show', ['teamId' => $teamId]);
+            } catch (Exception $exception) {
+                 return redirect()->route('teams.create')->withInput()->withErrors("Impossible de créer l'équipe.");
+            }
+                 return redirect()->route('teams.show', ['teamId' => $teamId]);
         }
         return redirect()->route('login');
 
@@ -88,9 +83,9 @@ class Controller extends BaseController
         
     }
 
-public function storeMatch(Request $request) {
+    public function storeMatch(Request $request) {
     
-    if (session()->has('user')){
+        if (session()->has('user')){
             
             $messages = [
                 'team0.required' => 'Vous devez choisir une équipe.',
@@ -134,55 +129,48 @@ public function storeMatch(Request $request) {
 
             $newMatch=['team0'=>$team0, 'team1'=>$team1, 'score0'=>$score0, 'score1'=>$score1, 'date'=>$datetime];
             
+            try {
+                $matchId=$this->repository->insertMatch($newMatch);
+
+                $this->repository->updateRanking();
+
+                } catch (Exception $exception) {
+                    return redirect()->route('matches.create')->withInput()->withErrors("Impossible de créer le match.");
+                }
+
+                return redirect()->route('ranking.show');
+
+             }
+        return redirect()->route('login');
+    }
+
+    public function showLoginForm()
+    {
+        return view('login');
+    }
+
+    public function login(Request $request, Repository $repository)
+    {
+        $rules = [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'password' => ['required']
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'email.exists' => "Cet utilisateur n'existe pas.",
+            'password.required' => "Vous devez saisir un mot de passe.",
+        ];
+        $validatedData = $request->validate($rules, $messages);
+        //$pass = Hash::make($validatedData['password']);
+        $email = $validatedData['email'];
         try {
-            $matchId=$this->repository->insertMatch($newMatch);
-
-            $this->repository->updateRanking();
-
-            } catch (Exception $exception) {
-                return redirect()->route('matches.create')->withInput()->withErrors("Impossible de créer le match.");
-            }
-
-            return redirect()->route('ranking.show');
-
-    }
-    return redirect()->route('login');
-
-}
-
-public function showLoginForm()
-{
-    return view('login');
-}
-
-public function login(Request $request, Repository $repository)
-{
-    $rules = [
-        'email' => ['required', 'email', 'exists:users,email'],
-        'password' => ['required']
-    ];
-    $messages = [
-        'email.required' => 'Vous devez saisir un e-mail.',
-        'email.email' => 'Vous devez saisir un e-mail valide.',
-        'email.exists' => "Cet utilisateur n'existe pas.",
-        'password.required' => "Vous devez saisir un mot de passe.",
-    ];
-    $validatedData = $request->validate($rules, $messages);
-    //$pass = Hash::make($validatedData['password']);
-    $email = $validatedData['email'];
-    try {
-      # TODO 1 : lever une exception si le mot de passe de l'utilisateur n'est pas correct
-     // $this->repository->getUser($email, $validatedData['password']);
+            $request->session()->put('user', $this->repository->getUser($email, $validatedData['password']));
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
+        }
         
-      # TODO 2 : se souvenir de l'authentification de l'utilisateur
-      $request->session()->put('user', $this->repository->getUser($email, $validatedData['password']));
-
-
-    } catch (Exception $e) {
-        return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
-    }
-    
-    return redirect()->route('ranking.show');
+        return redirect()->route('ranking.show');
     }
 
     public function followTeam(int $teamId)
@@ -199,11 +187,87 @@ public function login(Request $request, Repository $repository)
     public function deleteMatch(int $matchId)
     {
         if (session()->has('user')){
-            $match=$this->repository->delete($matchId);     
-                return view('matches.delete', ['match'=>$match]);
-            }
-            return redirect()->route('login');
-       
+            $match=$this->repository->delete($matchId); 
+            $this->repository->updateRanking();    
+            return redirect()->route('ranking.show');
+        }
+        return redirect()->route('login');
     }
-   
+
+    public function showRegisterForm()
+    {
+        return view('register');
+    }
+
+    public function register(Request $request, Repository $repository)
+    {
+        $rules = [
+            'email' => ['required', 'email'],
+            'password' => ['required'], 
+            'passwordConfirmation'=>['required'],
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'password.required' => "Vous devez saisir un mot de passe.",
+            'passwordConfirmation.required' => "Vous devez confirmer le mot de passe.",
+        
+        ];
+
+        
+        $validatedData = $request->validate($rules, $messages);
+        //$pass = Hash::make($validatedData['password']);
+        $email = $validatedData['email'];
+        if($validatedData['password']==$validatedData['passwordConfirmation']){
+            try {
+                $this->repository->addUser($email, $validatedData['password']); 
+                 $request->session()->put('user', $this->repository->getUser($email, $validatedData['password']));
+                
+            } catch (Exception $e) {
+                return redirect()->back()->withInput()->withErrors("Impossible de vous inscrire.");
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors("mots de passe différents.");
+        }
+        return redirect()->route('ranking.show');
+    }
+
+    public function showChangePasswordForm() 
+    {
+        return view('changepass');
+    }
+
+    public function changePassword(Request $request,Repository $repository)
+    {
+        $rules = [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'old_password' => ['required'],
+            'new_password' => ['required'],
+            'new_passwordConfirm' => ['required'],
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'email.exists' => "Cet utilisateur n'existe pas.",
+            'old_password.required' => "Vous devez saisir votre ancien mot de passe.",
+            'new_password.required' => "Vous devez saisir un nouveau mot de passe.",
+            'new_passwordConfirm.required' => "Vous devez confirmer votre nouveau mot de passe.",
+        ];
+        $validatedData = $request->validate($rules, $messages);
+        $email = $validatedData['email'];
+        if($validatedData['new_password']==$validatedData['new_passwordConfirm']){
+            try {
+
+                $user=$this->repository->getUser($email, $validatedData['old_password']);
+
+                $user=$this->repository->changePassword($email,$validatedData['old_password'], $validatedData['new_password'] );
+            
+            } catch (Exception $e) {
+                return redirect()->back()->withInput()->withErrors("Impossible de changer le mot de passe.");
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors("mots de passe différents.");
+        }
+        return redirect()->route('ranking.show');
+    }
 }

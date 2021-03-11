@@ -1,19 +1,17 @@
-@extends('base')
+@extends('base') 
 
 @section('title', 'Création d\'un match')
 
 @section('content')
 
-
-<form  method="POST" action="{{route('matches.store')}}">
-@csrf
-@if ($errors->any())
-        <div class="alert alert-warning">
-            Le match n'a pas pu être ajouté &#9785;
-        </div>
-    @endif
-    <div class="form-group">
-      <label for="team0">Équipe à domicile</label>
+<form method="POST" action="{{route('matches.store')}}">
+	@csrf @if ($errors->any())
+	<div class="alert alert-warning">
+		Le match n'a pas pu être ajouté &#9785;
+	</div>
+	@endif
+	<div class="form-group">
+		<label for="team0">Équipe à domicile</label>
 
       <select class="form-control" id="team0" name="team0">
       @foreach($teams as $team)

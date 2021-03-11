@@ -1,18 +1,19 @@
 <!doctype html>
 <html>
 @extends('base')
-    <head>
-     
-    @section('title')
-        Matchs de l'équipe {{$team1['name']}}
-    @endsection
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" >
-    </head>
-    <body>
-  
-   <div class="container">
-   @section('content')
-   <a class="btn btn-primary" href="{{ route('teams.follow', ['teamId'=>$team1['team_id']]) }}">Suivre</a><br><br>
+
+<head>
+
+	@section('title') Matchs de l'équipe {{$team1['name']}} @endsection
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+	 crossorigin="anonymous">
+</head>
+
+<body>
+
+	<div class="container">
+		@section('content')
+		<a class="btn btn-primary" href="{{ route('teams.follow', ['teamId'=>$team1['team_id']]) }}">Suivre</a><br><br>
 
    <table class="table table-striped">
                 <thead class="thead-dark">
@@ -26,31 +27,32 @@
                 <td>{{ $team1['goal_against_count'] }}</td><td>{{ $team1['goal_difference'] }}</td>
                 <td>{{ $team1['points'] }}</td></th>
                 </tbody>
-</table>
-       <table class="table table-striped">
-                <thead class="thead-dark">
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-dark">
                     <tr>
                    <!-- <th><td>Date</td><td>team0</td><td>score0</td>  <td>score1</td><td>team1</td></th>  --></tr>
                 </thead>
-                <tbody>
+            <tbody>
                 @foreach ($team as $match)
                 
                 <tr><td>  </td><td>{{ $match['date'] }}</td>
                 <td><a href="{{route('teams.show', ['teamId'=>$match['team0']])}}">
                 {{ $match['name0'] }}</a></td><td>{{ $match['score0'] }}</td>  
                 <td>{{ $match['score1'] }}</td><td><a href="{{route('teams.show', ['teamId'=>$match['team1']])}}">
-                {{ $match['name1'] }}</a></td> <td>  
-</td></th>
+                {{ $match['name1'] }}</a></td> <td> 
+                <form method="POST" action="{{ route('matches.delete', ['matchId'=>$match['id']]) }}"  id="matches_delete">
+                    @csrf                    
+                    </div>
+                    <button class="btn btn-primary" id="matches_delete"> Supprimer </button>
+                  </form>     
+                </td></th>
 
             @endforeach
                 </tbody>
-            </table>
+    </table>
             @endsection
 
         </div>
-
-            
-           
     </body>
 </html>
-

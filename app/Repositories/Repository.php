@@ -144,21 +144,19 @@ class Repository
 
     function getUser(string $email, string $password): array
     {
-    // TODO
     
-    $users= DB::table('users')->where('email', $email)->get()->toArray();
-    
-    if (count($users)==0){
-        throw new Exception('Utilisateur inconnu');
-    }
-    $user=$users[0];
-   
-    $ok = Hash::check($password, $user['password_hash']);
-
-        if (!$ok){
+        $users= DB::table('users')->where('email', $email)->get()->toArray();
+        
+        if (count($users)==0){
             throw new Exception('Utilisateur inconnu');
         }
-    return ['id'=>$user['id'],'email'=>$user['email']];
+        $user=$users[0];
+    
+        $ok = Hash::check($password, $user['password_hash']);
+            if (!$ok){
+                throw new Exception('Utilisateur inconnu');
+            }
+        return ['id'=>$user['id'],'email'=>$user['email']];
     }
     
 
@@ -184,10 +182,10 @@ class Repository
       DB::table('users')->where('email', $email)->update(['password_hash'=> $newPasswordHash]);
     }
 
-    public function delete($matchId) :void
+
+    public function delete($matchId) : void
     {
         DB::table('matches')->where('id', $matchId)->delete();
     }
-    
-}
 
+}

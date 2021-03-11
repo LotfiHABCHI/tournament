@@ -1,8 +1,13 @@
-@extends('base') @section('title', 'Authentification') @section('content')
-<form method="POST" action="{{route('login.post')}}">
+@extends('base') 
+
+@section('title', 'Inscription') 
+
+@section('content')
+
+<form method="POST" action="{{route('register.post')}}">
 	@csrf @if ($errors->any())
 	<div class="alert alert-warning">
-		Vous n'avez pas pu être authentifié &#9785;
+		Vous n'avez pas pu être inscrit &#9785;
 	</div>
 	@endif
 	<div class="form-group">
@@ -25,8 +30,18 @@
       </div>
       @enderror
     </div>
-    <button type="submit" class="btn btn-primary">Se connecter</button>
+    <div class="form-group">
+      <label for="passwordConfirmation">Confirmation du mot de passe</label>
+      <input type="password" id="passwordConfirmation" name="passwordConfirmation" value="{{old('passwordConfirmation')}}"
+             aria-describedby="passwordConfirmation_feedback" class="form-control @error('passwordConfirmation') is-invalid @enderror">  
+      @error('passwordConfirmation')
+      <div id="passwordConfirmation_feedback" class="invalid-feedback">
+        {{ $message }}
+      </div>
+      @enderror
+    </div>
+    <button type="submit" class="btn btn-primary">Inscription</button>
+
 
 </form>
-
 @endsection

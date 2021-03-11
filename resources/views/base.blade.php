@@ -15,13 +15,14 @@
 				<a class="p-2 text-dark" href="/">Classement</a>
 			</nav>
 			@if (session()->has('user'))
-                <form method="POST" action="{{route('logout')}}">
-                @csrf
-                    <div class="btn-group">
-                        <a class="btn btn-outline-danger" href="{{route('teams.create')}}">Créer une équipe</a>
-                        <a class="btn btn-outline-danger" href="{{route('matches.create')}}">Ajouter un match</a>
-                        <span class="btn btn-primary disabled">{{ session()->get('user')['email'] }}</span>
-                       <button  type="submit" class="btn btn-outline-primary">Déconnexion</a>
+			<form method="POST" action="{{route('logout')}}">
+				@csrf
+				<div class="btn-group">
+					<a class="btn btn-outline-danger" href="{{route('teams.create')}}">Créer une équipe</a>
+					<a class="btn btn-outline-danger" href="{{route('matches.create')}}">Ajouter un match</a>
+					<span class="btn btn-primary disabled">{{ session()->get('user')['email'] }}</span>
+                        <a class="btn btn-outline-primary"  href="{{route('changepass')}}">Modifier le mot de passe</a>
+                        <button  type="submit" class="btn btn-outline-primary">Déconnexion</button>
                     </div>
 
                 </form>
@@ -29,6 +30,8 @@
             <a class="btn btn-outline-danger" href="{{route('teams.create')}}">Créer une équipe</a>
                         <a class="btn btn-outline-danger" href="{{route('matches.create')}}">Ajouter un match</a>
                 <a class="btn btn-outline-primary" href="/login">Connexion</a>
+                <a class="btn btn-outline-primary" href="/register">Inscription</a>
+
             @endif
             </div>
         </div>
